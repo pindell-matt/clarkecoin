@@ -1,36 +1,38 @@
-require 'tmpdir'
+require_relative 'keygen'
 
 class Wallet
-  attr_reader :file_path, :wallet_path
+  attr_reader :key, :file_path, :wallet_path, :public_key
 
   def initialize(file_path)
+    @key         = KeyGen.new
     @file_path   = Dir.pwd + file_path
     @wallet_path = @file_path + "/.wallet"
+
     create_wallet_directory unless wallet_exists?
+    create_keys
+  end
+
+  def create_keys
+    create_public_key_pem
+    create_private_key_pem
   end
 
   def create_wallet_directory
     FileUtils.mkdir(wallet_path)
   end
 
+  def create_public_key_pem
+    @public_key = key.public_key_pem
+    File.write("#{wallet_path}/public_key.pem", public_key)
+  end
+
+  def create_private_key_pem
+    private_key = key.private_key_pem
+    File.write("#{wallet_path}/private_key.pem", private_key)
+  end
+
   def wallet_exists?
     File.directory?(wallet_path)
   end
 
-  # see if .wallet exists?
-    # if .wallet does not exist -> create it + write private and public keys to file
-      # print out contents of public key file
-
-    # if .wallet DOES exist
-      # check if it contains ~/.wallet/public_key.pem and ~/.wallet/private_key.pem
-        # if yes, print out contents of public key file
-        # else, create ~/.wallet/public_key.pem and ~/.wallet/private_key.pem
-          # print out contents of public_key file
-
 end
-
-# def directory_exists?(directory)
-#   File.directory?(directory)
-# end
-
-# arg for where to put the wallet
