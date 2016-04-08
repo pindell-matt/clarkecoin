@@ -7,7 +7,11 @@ class Wallet
     @key         = KeyGen.new
     @file_path   = Dir.pwd + file_path
     @wallet_path = @file_path + "/.wallet"
+    
+    prepare_wallet
+  end
 
+  def prepare_wallet
     create_wallet_directory unless wallet_exists?
     create_keys
   end
