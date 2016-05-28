@@ -41,7 +41,11 @@ class Wallet
   end
 
   def generate_coinbase
-    Transaction.coinbase(public_key)
+    transaction.coinbase(public_key)
   end
 
+  private
+    def transaction
+      Transaction.new
+    end
 end

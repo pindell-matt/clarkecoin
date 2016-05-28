@@ -3,7 +3,7 @@ require "digest"
 
 class Transaction
 
-  def self.coinbase(public_key)
+  def coinbase(public_key)
     inputs    = []
     raw_json  = { 'amount' => 25, 'address' => "#{public_key}" }.to_json
     outputs   = [JSON.parse(raw_json)]
@@ -13,6 +13,13 @@ class Transaction
     outputs_string     = outputs.map { |i| i["amount"].to_s + i["address"] }.join
     transaction_string = inputs_string + outputs_string + timestamp.to_s
     txn_hash           = Digest::SHA256.hexdigest(transaction_string)
+
+    {
+      "inputs":    inputs,
+      "outputs":   outputs,
+      "timestamp": timestamp,
+      "hash":      txn_hash
+    }
   end
 
 end

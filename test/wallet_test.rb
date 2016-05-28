@@ -9,9 +9,9 @@ class WalletTest < Minitest::Test
     FileUtils.rm_rf(@file_path) if File.directory?(@file_path)
   end
 
-  # def teardown
-  #   FileUtils.rm_rf(@file_path) if File.directory?(@file_path)
-  # end
+  def teardown
+    FileUtils.rm_rf(@file_path) if File.directory?(@file_path)
+  end
 
   def test_can_create_wallet_directory
     refute File.directory?(@file_path)
@@ -52,8 +52,22 @@ class WalletTest < Minitest::Test
     assert File.directory?(@file_path)
     assert File.exist?(public_key_path)
     assert File.exist?(private_key_path)
+  end
 
-    wallet.generate_coinbase
+  def test_can_create_initial_coinbase_transaction
+    refute File.directory?(@file_path)
+
+    wallet           = Wallet.new("/test/support")
+    public_key_path  = @file_path + "/public_key.pem"
+    private_key_path = @file_path + "/private_key.pem"
+
+    coinbase = wallet.generate_coinbase
+
+    assert coinbase[:inputs]
+    assert coinbase[:outputs].first["amount"]
+    assert coinbase[:outputs].first["address"]
+    assert coinbase[:timestamp]
+    assert coinbase[:hash]
   end
 
 end
