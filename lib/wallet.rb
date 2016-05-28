@@ -1,4 +1,5 @@
 require_relative 'keygen'
+require_relative 'transaction'
 
 class Wallet
   attr_reader :key, :file_path, :wallet_path, :public_key
@@ -7,7 +8,7 @@ class Wallet
     @key         = KeyGen.new
     @file_path   = Dir.pwd + file_path
     @wallet_path = @file_path + "/.wallet"
-    
+
     prepare_wallet
   end
 
@@ -37,6 +38,10 @@ class Wallet
 
   def wallet_exists?
     File.directory?(wallet_path)
+  end
+
+  def generate_coinbase
+    Transaction.coinbase(public_key)
   end
 
 end

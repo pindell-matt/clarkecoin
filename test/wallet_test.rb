@@ -52,6 +52,8 @@ class WalletTest < Minitest::Test
     assert File.directory?(@file_path)
     assert File.exist?(public_key_path)
     assert File.exist?(private_key_path)
+
+    wallet.generate_coinbase
   end
 
 end
